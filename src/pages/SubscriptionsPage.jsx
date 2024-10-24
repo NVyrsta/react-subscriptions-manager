@@ -13,6 +13,7 @@ import MultiSelect from '../components/MultiSelect.jsx';
 import api from '../services/authService.js';
 import { FaArrowRight, FaArrowLeft } from 'react-icons/fa6';
 import { useNotifications } from '@toolpad/core/useNotifications';
+import ArrowButton from '../components/ArrowButton.jsx';
 
 const SubscriptionsPage = () => {
   const [tabIndex, setTabIndex] = useState(0);
@@ -156,64 +157,22 @@ const SubscriptionsPage = () => {
               alignItems="center"
               gap={2}
             >
-              <IconButton
-                variant="contained"
-                color="primary"
-                size="small"
+              <ArrowButton
+                icon={<FaArrowRight />}
                 onClick={() => handleItemChange(selectedToMove, 'move')}
-                disabled={
+                isDisabled={
                   !selectedToMove.length ||
                   selectedToMove.every((item) => selectedItems.includes(item))
                 }
-                sx={{
-                  borderRadius: '50%',
-                  padding: '0.5rem',
-                  aspectRatio: 1,
-                  backgroundColor: '#1976d2',
-                  color: '#fff',
-                  '&:hover': {
-                    backgroundColor: '#1565c0',
-                    cursor: 'pointer',
-                  },
-                  '&.Mui-disabled': {
-                    backgroundColor: '#f2f2f2',
-                    color: '#bdbdbd',
-                    cursor: 'not-allowed',
-                  },
-                  boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)',
-                }}
-              >
-                <FaArrowRight />
-              </IconButton>
-              <IconButton
-                variant="contained"
-                color="primary"
-                size="small"
+              />
+              <ArrowButton
+                icon={<FaArrowLeft />}
                 onClick={() => handleItemChange(selectedToMove, 'remove')}
-                disabled={
+                isDisabled={
                   !selectedToMove.length ||
                   selectedToMove.every((item) => availableItems.includes(item))
                 }
-                sx={{
-                  borderRadius: '50%',
-                  padding: '0.5rem',
-                  aspectRatio: 1,
-                  backgroundColor: '#1976d2',
-                  color: '#fff',
-                  '&:hover': {
-                    backgroundColor: '#1565c0',
-                    cursor: 'pointer',
-                  },
-                  '&.Mui-disabled': {
-                    backgroundColor: '#f2f2f2',
-                    color: '#bdbdbd',
-                    cursor: 'not-allowed',
-                  },
-                  boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)',
-                }}
-              >
-                <FaArrowLeft />
-              </IconButton>
+              />
               <Button
                 variant="contained"
                 color="primary"
