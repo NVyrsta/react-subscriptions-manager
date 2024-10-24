@@ -14,6 +14,7 @@ import api from '../services/authService.js';
 import { FaArrowRight, FaArrowLeft } from 'react-icons/fa6';
 import { useNotifications } from '@toolpad/core/useNotifications';
 import ArrowButton from '../components/ArrowButton.jsx';
+import TabContent from '../components/TabContent.jsx';
 
 const SubscriptionsPage = () => {
   const [tabIndex, setTabIndex] = useState(0);
@@ -125,80 +126,84 @@ const SubscriptionsPage = () => {
         </Tabs>
       </AppBar>
 
-      <Box
-        p={3}
-        sx={{
-          borderRadius: '4px',
-          boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
-          background: 'linear-gradient(to bottom, #f0f8ff, #e0f2ff)',
-        }}
+      <TabContent
+        title={
+          tabIndex === 0 ? 'Select Companies to Track' : 'Select Mines to Track'
+        }
+        tab={tabIndex === 0 ? 'Company' : 'Mine'}
       >
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={5}>
-            <MultiSelect
-              items={availableItems}
-              selectedToMove={selectedToMove}
-              setSelectedToMove={setSelectedToMove}
-              onItemsChange={(items) => handleItemChange(items, 'move')}
-            />
-          </Grid>
+        <Box>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={5}>
+              <MultiSelect
+                items={availableItems}
+                selectedToMove={selectedToMove}
+                setSelectedToMove={setSelectedToMove}
+                onItemsChange={(items) => handleItemChange(items, 'move')}
+              />
+            </Grid>
 
-          <Grid
-            item
-            xs={12}
-            sm={2}
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-          >
-            <Box
+            <Grid
+              item
+              xs={12}
+              sm={2}
               display="flex"
-              flexDirection="column"
+              justifyContent="center"
               alignItems="center"
-              gap={2}
             >
-              <ArrowButton
-                icon={<FaArrowRight />}
-                onClick={() => handleItemChange(selectedToMove, 'move')}
-                isDisabled={
-                  !selectedToMove.length ||
-                  selectedToMove.every((item) => selectedItems.includes(item))
-                }
-              />
-              <ArrowButton
-                icon={<FaArrowLeft />}
-                onClick={() => handleItemChange(selectedToMove, 'remove')}
-                isDisabled={
-                  !selectedToMove.length ||
-                  selectedToMove.every((item) => availableItems.includes(item))
-                }
-              />
-              <Button
-                variant="contained"
-                color="primary"
-                size="small"
-                onClick={handleSave}
-                sx={{
-                  borderRadius: '50%',
-                  padding: '0.5rem',
-                  marginTop: '0.5rem',
-                }}
+              <Box
+                display="flex"
+                flexDirection="column"
+                alignItems="center"
+                gap={2}
               >
-                Save
-              </Button>
-            </Box>
-          </Grid>
+                <ArrowButton
+                  icon={<FaArrowRight />}
+                  onClick={() => handleItemChange(selectedToMove, 'move')}
+                  isDisabled={
+                    !selectedToMove.length ||
+                    selectedToMove.every((item) => selectedItems.includes(item))
+                  }
+                />
+                <ArrowButton
+                  icon={<FaArrowLeft />}
+                  onClick={() => handleItemChange(selectedToMove, 'remove')}
+                  isDisabled={
+                    !selectedToMove.length ||
+                    selectedToMove.every((item) =>
+                      availableItems.includes(item),
+                    )
+                  }
+                />
+              </Box>
+            </Grid>
 
-          <Grid item xs={12} sm={5}>
-            <MultiSelect
-              items={selectedItems}
-              selectedToMove={selectedToMove}
-              setSelectedToMove={setSelectedToMove}
-              onItemsChange={(items) => handleItemChange(items, 'remove')}
-            />
+            <Grid item xs={12} sm={5}>
+              <MultiSelect
+                items={selectedItems}
+                selectedToMove={selectedToMove}
+                setSelectedToMove={setSelectedToMove}
+                onItemsChange={(items) => handleItemChange(items, 'remove')}
+              />
+            </Grid>
           </Grid>
-        </Grid>
-      </Box>
+        </Box>
+
+        <Box p={3} display="flex" justifyContent="flex-end">
+          <Button
+            variant="contained"
+            color="primary"
+            size="small"
+            onClick={handleSave}
+            sx={{
+              padding: '0.5rem',
+              marginTop: '0.5rem',
+            }}
+          >
+            Save
+          </Button>
+        </Box>
+      </TabContent>
     </div>
   );
 };
