@@ -8,7 +8,6 @@ const filterData = (allList, subscriptions) => {
 
 export const fetchData = createAsyncThunk('data/fetchData', async (type) => {
   const response = await api.get(`/${type}/`);
-  console.log('fetchData', response.data, type);
   return response.data;
 });
 
@@ -16,7 +15,6 @@ export const fetchSubscriptions = createAsyncThunk(
   'data/fetchSubscriptions',
   async (type) => {
     const response = await api.get(`/subscriptions/${type}/`);
-    console.log('fetchSubscriptions', response.data, type);
 
     return response.data;
   },
@@ -28,7 +26,6 @@ export const saveData = createAsyncThunk('data/saveData', async (data) => {
     data.requestBody,
   );
 
-  console.log('data.requestBody', data.requestBody, data.type);
   return response.data;
 });
 
