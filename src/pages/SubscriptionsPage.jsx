@@ -40,7 +40,7 @@ const SubscriptionsPage = () => {
 
   const type = tabIndex === 0 ? 'companies' : 'mines';
 
-  const handleItemChange = (action) => {
+  const handleItemChange = (items, action) => {
     if (action === 'move') {
       dispatch(moveItems({ items: selectedToMove, action: 'move' }));
     } else if (action === 'remove') {
