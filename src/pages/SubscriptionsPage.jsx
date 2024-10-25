@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   AppBar,
   Tabs,
@@ -8,90 +9,66 @@ import {
   Box,
   Button,
   Grid,
-  IconButton,
 } from '@mui/material';
-import MultiSelect from '../components/MultiSelect.jsx';
-import api from '../services/authService.js';
 import { FaArrowRight, FaArrowLeft } from 'react-icons/fa6';
-import { useNotifications } from '@toolpad/core/useNotifications';
+
+import MultiSelect from '../components/MultiSelect.jsx';
 import ArrowButton from '../components/ArrowButton.jsx';
 import TabContent from '../components/TabContent.jsx';
 
+import {
+  fetchData,
+  fetchSubscriptions,
+  moveItems,
+  saveData,
+} from '../features/subscriptionsSlice.js';
+
+import useSaveNotification from '../hooks/useSaveNotification';
+
 const SubscriptionsPage = () => {
   const [tabIndex, setTabIndex] = useState(0);
-  const [availableItems, setAvailableItems] = useState([]);
-  const [selectedItems, setSelectedItems] = useState([]);
   const [selectedToMove, setSelectedToMove] = useState([]);
-  const [error, setError] = useState('');
 
-  const notifications = useNotifications();
+  const showNotification = useSaveNotification();
+  const dispatch = useDispatch();
 
-  const fetchData = useCallback(async (type) => {
-    const availableEndpoint = type === 'companies' ? '/companies/' : '/mines/';
-    const selectedEndpoint = `/subscriptions/${type}/`;
+  const { availableItems, selectedItems, loading, error } = useSelector(
+    (state) => {
+      return state.subscriptions;
+    },
+  );
 
-    try {
-      const availableRes = await api.get(availableEndpoint);
-      const selectedRes = await api.get(selectedEndpoint);
+  const type = tabIndex === 0 ? 'companies' : 'mines';
 
-      const filteredAvailable = availableRes.data.filter(
-        (item) => !selectedRes.data.some((sel) => sel.id === item.id),
-      );
-
-      setAvailableItems(filteredAvailable);
-      setSelectedItems(selectedRes.data);
-      setError('');
-    } catch (error) {
-      notifications.show('Failed to fetch data. Please try again.', {
-        severity: 'error',
-        autoHideDuration: 3000,
-      });
-      setError(error.message);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchData(tabIndex === 0 ? 'companies' : 'mines');
-  }, [tabIndex, fetchData]);
-
-  const handleItemChange = (items, action) => {
+  const handleItemChange = (action) => {
     if (action === 'move') {
-      setSelectedItems((prevSelected) => [...prevSelected, ...items]);
-      setAvailableItems((prevAvailable) =>
-        prevAvailable.filter((i) => !items.includes(i)),
-      );
+      dispatch(moveItems({ items: selectedToMove, action: 'move' }));
     } else if (action === 'remove') {
-      setAvailableItems((prevAvailable) => [...prevAvailable, ...items]);
-      setSelectedItems((prevSelected) =>
-        prevSelected.filter((i) => !items.includes(i)),
-      );
+      dispatch(moveItems({ items: selectedToMove, action: 'remove' }));
     }
     setSelectedToMove([]);
   };
 
   const handleSave = async () => {
-    const type = tabIndex === 0 ? 'companies' : 'mines';
-    const selectedIds = selectedItems.map((item) => item.id);
+    const requestBody = {
+      [tabIndex === 0 ? 'company_ids' : 'mine_ids']: selectedItems.map(
+        (item) => item.id,
+      ),
+    };
 
     try {
-      const requestBody =
-        type === 'companies'
-          ? { company_ids: selectedIds }
-          : { mine_ids: selectedIds };
-
-      await api.post(`/subscriptions/${type}/`, requestBody);
-
-      notifications.show('Saved successfully!', {
-        severity: 'success',
-        autoHideDuration: 3000,
-      });
+      await dispatch(saveData({ type, requestBody })).unwrap();
+      showNotification('fulfilled');
     } catch (error) {
-      notifications.show('Failed to save. Please try again.', {
-        severity: 'error',
-        autoHideDuration: 3000,
-      });
+      showNotification('rejected');
     }
   };
+
+  useEffect(() => {
+    dispatch(fetchData(type)).then(() => {
+      dispatch(fetchSubscriptions(type));
+    });
+  }, [tabIndex, dispatch, type]);
 
   return (
     <div>
@@ -121,6 +98,7 @@ const SubscriptionsPage = () => {
           centered
         >
           <Tab label="Companies" />
+
           <Tab label="Mines" />
         </Tabs>
       </AppBar>
@@ -139,6 +117,7 @@ const SubscriptionsPage = () => {
                 selectedToMove={selectedToMove}
                 setSelectedToMove={setSelectedToMove}
                 onItemsChange={(items) => handleItemChange(items, 'move')}
+                loading={loading}
               />
             </Grid>
 
@@ -181,6 +160,7 @@ const SubscriptionsPage = () => {
                 selectedToMove={selectedToMove}
                 setSelectedToMove={setSelectedToMove}
                 onItemsChange={(items) => handleItemChange(items, 'remove')}
+                loading={loading}
               />
             </Grid>
           </Grid>

@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Box, TextField } from '@mui/material';
+import LinearProgress from '@mui/material/LinearProgress';
 
 const MultiSelect = ({
   items,
   onItemsChange,
   selectedToMove,
   setSelectedToMove,
+  loading,
 }) => {
   const [filteredItems, setFilteredItems] = useState(items || []);
 
@@ -64,6 +66,8 @@ const MultiSelect = ({
           backgroundColor: 'white',
         }}
       >
+        <Box minHeight={10}>{loading && <LinearProgress />}</Box>
+
         {filteredItems.map((item) => (
           <Box
             key={item.id}
@@ -78,7 +82,6 @@ const MultiSelect = ({
                 ? '#1976d2'
                 : 'white',
               color: selectedToMove.includes(item) ? 'white' : 'gray',
-              // '&:hover': { backgroundColor: '#f5f5f5', color: 'gray' },
             }}
           >
             {item.name}

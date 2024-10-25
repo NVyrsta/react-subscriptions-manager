@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Container, TextField, Button, Typography, Box } from '@mui/material';
 import api from '../services/authService.js';
@@ -21,17 +20,18 @@ const LoginPage = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
     try {
       const response = await api.post('/auth/token/', {
         username,
         password,
       });
+
       localStorage.setItem('access_token', response.data.access);
       localStorage.setItem('refresh_token', response.data.refresh);
 
       navigate('/subscriptions');
     } catch (error) {
-      console.error('Login error', error);
       setErrorMessage('Failed to login. Please check your credentials.');
     }
   };
@@ -40,6 +40,7 @@ const LoginPage = () => {
     <Container maxWidth="xs">
       <Box display="flex" flexDirection="column" alignItems="center" mt={8}>
         <Typography variant="h4">Login</Typography>
+
         <form
           onSubmit={handleLogin}
           style={{ width: '100%', marginTop: '1em' }}
@@ -73,6 +74,7 @@ const LoginPage = () => {
             Sign In
           </Button>
         </form>
+
         {errorMessage && (
           <Typography color="error" mt={2}>
             {errorMessage}
