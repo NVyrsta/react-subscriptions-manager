@@ -10,11 +10,17 @@ import {
   Button,
   Grid,
 } from '@mui/material';
-import { FaArrowRight, FaArrowLeft } from 'react-icons/fa6';
+import {
+  FaArrowRight,
+  FaArrowLeft,
+  FaArrowUp,
+  FaArrowDown,
+} from 'react-icons/fa6';
 
 import MultiSelect from '../components/MultiSelect.jsx';
 import ArrowButton from '../components/ArrowButton.jsx';
 import TabContent from '../components/TabContent.jsx';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 import {
   fetchData,
@@ -28,6 +34,7 @@ import useSaveNotification from '../hooks/useSaveNotification';
 const SubscriptionsPage = () => {
   const [tabIndex, setTabIndex] = useState(0);
   const [selectedToMove, setSelectedToMove] = useState([]);
+  const isSmallScreen = useMediaQuery('(min-width:600px)');
 
   const showNotification = useSaveNotification();
   const dispatch = useDispatch();
@@ -137,7 +144,7 @@ const SubscriptionsPage = () => {
               }}
             >
               <ArrowButton
-                icon={<FaArrowRight />}
+                icon={isSmallScreen ? <FaArrowRight /> : <FaArrowDown />}
                 onClick={() => handleItemChange(selectedToMove, 'move')}
                 isDisabled={
                   !selectedToMove.length ||
@@ -145,7 +152,7 @@ const SubscriptionsPage = () => {
                 }
               />
               <ArrowButton
-                icon={<FaArrowLeft />}
+                icon={isSmallScreen ? <FaArrowLeft /> : <FaArrowUp />}
                 onClick={() => handleItemChange(selectedToMove, 'remove')}
                 isDisabled={
                   !selectedToMove.length ||
