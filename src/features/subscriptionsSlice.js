@@ -41,11 +41,13 @@ const dataSlice = createSlice({
     moveItems(state, action) {
       const { items, action: moveAction } = action.payload;
 
+      // Move to subscriptions
       if (moveAction === 'move') {
         state.selectedItems = [...state.selectedItems, ...items];
         state.availableItems = state.availableItems.filter(
           (item) => !items.some((toMove) => toMove.id === item.id),
         );
+        // Remove from subscriptions
       } else if (moveAction === 'remove') {
         state.availableItems = [...state.availableItems, ...items];
         state.selectedItems = state.selectedItems.filter(
