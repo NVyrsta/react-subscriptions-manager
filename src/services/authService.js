@@ -1,4 +1,11 @@
 import axios from 'axios';
+import {
+  getAccessToken,
+  setAccessToken,
+  getRefreshToken,
+  removeAccessToken,
+  removeRefreshToken,
+} from './tokenService';
 
 const api = axios.create({
   baseURL: 'https://temptesttask.pulseintelligence.com/api/v1',
@@ -6,15 +13,13 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('access_token');
+    const token = getAccessToken();
     if (token) {
       config.headers['Authorization'] = 'Bearer ' + token;
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  },
+  (error) => Promise.reject(error),
 );
 
 api.interceptors.response.use(
@@ -28,26 +33,25 @@ api.interceptors.response.use(
       !originalRequest._retry
     ) {
       originalRequest._retry = true;
+      const refreshToken = getRefreshToken();
 
-      try {
-        const refreshToken = localStorage.getItem('refresh_token');
-        if (refreshToken) {
+      if (refreshToken) {
+        try {
           const { data } = await axios.post(
             'https://temptesttask.pulseintelligence.com/api/v1/auth/token/refresh/',
             { refresh: refreshToken },
           );
-
-          localStorage.setItem('access_token', data.access);
-          originalRequest.headers['Authorization'] = `Bearer ${data.access}`;
+          setAccessToken(data.access);
+          originalRequest.headers['Authorization'] = 'Bearer ' + data.access;
           return api(originalRequest);
-        } else {
-          localStorage.removeItem('access_token');
-          localStorage.removeItem('refresh_token');
+        } catch (refreshError) {
+          removeAccessToken();
+          removeRefreshToken();
           window.location.href = '/';
         }
-      } catch (refreshError) {
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('refresh_token');
+      } else {
+        removeAccessToken();
+        removeRefreshToken();
         window.location.href = '/';
       }
     }

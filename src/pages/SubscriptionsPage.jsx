@@ -4,6 +4,7 @@ import {
   Tabs,
   Tab,
   Typography,
+  Alert,
   Box,
   Button,
   Grid,
@@ -39,9 +40,13 @@ const SubscriptionsPage = () => {
 
       setAvailableItems(filteredAvailable);
       setSelectedItems(selectedRes.data);
-      console.log('fetched data', filteredAvailable, selectedRes.data);
+      setError('');
     } catch (error) {
-      setError('Failed to fetch data. Please try again.');
+      notifications.show('Failed to fetch data. Please try again.', {
+        severity: 'error',
+        autoHideDuration: 3000,
+      });
+      setError(error.message);
     }
   }, []);
 
@@ -76,13 +81,11 @@ const SubscriptionsPage = () => {
 
       await api.post(`/subscriptions/${type}/`, requestBody);
 
-      console.log('Save method triggered:', selectedIds);
       notifications.show('Saved successfully!', {
         severity: 'success',
         autoHideDuration: 3000,
       });
     } catch (error) {
-      console.error('Error saving subscriptions:', error);
       notifications.show('Failed to save. Please try again.', {
         severity: 'error',
         autoHideDuration: 3000,
@@ -96,11 +99,7 @@ const SubscriptionsPage = () => {
         Your Subscriptions
       </Typography>
 
-      {error && (
-        <Typography color="error" align="center">
-          {error}
-        </Typography>
-      )}
+      {error && <Alert severity="error">{error}</Alert>}
 
       <AppBar
         position="static"
@@ -133,7 +132,7 @@ const SubscriptionsPage = () => {
         tab={tabIndex === 0 ? 'Company' : 'Mine'}
       >
         <Box>
-          <Grid container spacing={2}>
+          <Grid container spacing={1}>
             <Grid item xs={12} sm={5}>
               <MultiSelect
                 items={availableItems}
@@ -150,32 +149,30 @@ const SubscriptionsPage = () => {
               display="flex"
               justifyContent="center"
               alignItems="center"
+              gap={2}
+              sx={{
+                flexDirection: {
+                  xs: 'row',
+                  sm: 'column',
+                },
+              }}
             >
-              <Box
-                display="flex"
-                flexDirection="column"
-                alignItems="center"
-                gap={2}
-              >
-                <ArrowButton
-                  icon={<FaArrowRight />}
-                  onClick={() => handleItemChange(selectedToMove, 'move')}
-                  isDisabled={
-                    !selectedToMove.length ||
-                    selectedToMove.every((item) => selectedItems.includes(item))
-                  }
-                />
-                <ArrowButton
-                  icon={<FaArrowLeft />}
-                  onClick={() => handleItemChange(selectedToMove, 'remove')}
-                  isDisabled={
-                    !selectedToMove.length ||
-                    selectedToMove.every((item) =>
-                      availableItems.includes(item),
-                    )
-                  }
-                />
-              </Box>
+              <ArrowButton
+                icon={<FaArrowRight />}
+                onClick={() => handleItemChange(selectedToMove, 'move')}
+                isDisabled={
+                  !selectedToMove.length ||
+                  selectedToMove.every((item) => selectedItems.includes(item))
+                }
+              />
+              <ArrowButton
+                icon={<FaArrowLeft />}
+                onClick={() => handleItemChange(selectedToMove, 'remove')}
+                isDisabled={
+                  !selectedToMove.length ||
+                  selectedToMove.every((item) => availableItems.includes(item))
+                }
+              />
             </Grid>
 
             <Grid item xs={12} sm={5}>
