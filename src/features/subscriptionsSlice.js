@@ -38,11 +38,6 @@ const dataSlice = createSlice({
     error: null,
   },
   reducers: {
-    sortData(state) {
-      state.selectedItems = state.availableItems
-        .slice()
-        .sort((a, b) => a.name.localeCompare(b.name));
-    },
     moveItems(state, action) {
       const { items, action: moveAction } = action.payload;
 
@@ -97,6 +92,6 @@ const dataSlice = createSlice({
   },
 });
 
-export const { sortData, moveItems } = dataSlice.actions;
+export const { moveItems } = dataSlice.actions;
 
 export default dataSlice.reducer;
