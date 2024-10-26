@@ -1,11 +1,11 @@
-import globals from "globals";
-import pluginJs from "@eslint/js";
-import pluginReact from "eslint-plugin-react";
-import pluginPrettier from "eslint-plugin-prettier";
+import globals from 'globals';
+import pluginJs from '@eslint/js';
+import pluginReact from 'eslint-plugin-react';
+import pluginPrettier from 'eslint-plugin-prettier';
 
 export default [
   {
-    files: ["**/*.{js,mjs,cjs,jsx}"],
+    files: ['**/*.{js,mjs,cjs,jsx}'],
   },
   {
     languageOptions: {
@@ -16,7 +16,15 @@ export default [
   pluginReact.configs.flat.recommended,
   {
     rules: {
-      "prettier/prettier": ["error", { singleQuote: true }],
+      'prettier/prettier': ['error', { singleQuote: true }],
+    },
+    settings: {
+      'import/resolver': {
+        alias: {
+          map: [['@', './src']],
+          extensions: ['.js', '.jsx', '.json'],
+        },
+      },
     },
   },
 ];

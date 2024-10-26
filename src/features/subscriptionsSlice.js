@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import api from '../services/authService.js';
+import api from '@/services/authService.js';
 
 const filterData = (allList, subscriptions) => {
   const subscriptionIds = subscriptions.map((item) => item.id);
