@@ -6,6 +6,7 @@ import PageLayout from '@/components/PageLayout';
 import LoginPage from '@/pages/LoginPage';
 import SubscriptionsPage from '@/pages/SubscriptionsPage';
 import NotAuthorizedPage from '@/pages/NotAuthorizedPage';
+import NotFoundPage from '@/pages/NotFoundPage';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import NotificationsProvider from '@/components/NotificationsProvider';
 import store from '@/app/store';
@@ -25,6 +26,7 @@ root.render(
                 element={<ProtectedRoute element={<SubscriptionsPage />} />}
               />
               <Route path="not-authorized" element={<NotAuthorizedPage />} />
+              <Route path="*" element={<NotFoundPage />} />
             </Route>
           </Routes>
         </Router>

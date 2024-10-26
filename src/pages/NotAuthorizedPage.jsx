@@ -1,14 +1,8 @@
 import React from 'react';
 import { Container, Typography, Box, Button } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const NotAuthorizedPage = () => {
-  const navigate = useNavigate();
-
-  const handleLoginRedirect = () => {
-    navigate('/');
-  };
-
   return (
     <Container maxWidth="xs">
       <Box display="flex" flexDirection="column" alignItems="center" mt={8}>
@@ -21,7 +15,9 @@ const NotAuthorizedPage = () => {
         <Button
           variant="contained"
           color="primary"
-          onClick={handleLoginRedirect}
+          component={Link}
+          to="/"
+          sx={{ mt: 3 }}
         >
           Go to Login
         </Button>
