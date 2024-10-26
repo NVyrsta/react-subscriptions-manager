@@ -1,8 +1,8 @@
 import React from 'react';
-import { AppBar, Toolbar, Box, IconButton, Typography } from '@mui/material';
+import { AppBar, Toolbar, Box, IconButton } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import logo from '../assets/logo.svg';
 import { LuLogOut } from 'react-icons/lu';
+import logo from '@/assets/logo.svg';
 
 const Header = () => {
   const navigate = useNavigate();

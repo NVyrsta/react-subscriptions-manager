@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, TextField, Button, Typography, Box } from '@mui/material';
-import api from '../services/authService.js';
+import api from '@/services/authService.js';
 
 const LoginPage = () => {
   const [username, setUsername] = useState('');
