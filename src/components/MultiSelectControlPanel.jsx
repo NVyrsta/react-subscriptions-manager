@@ -39,6 +39,16 @@ const MultiSelectControlPanel = ({
     setRightSelected([]);
   };
 
+  const handleLeftSelectionChange = (selectedItems) => {
+    setLeftSelected(selectedItems);
+    setRightSelected([]);
+  };
+
+  const handleRightSelectionChange = (selectedItems) => {
+    setRightSelected(selectedItems);
+    setLeftSelected([]);
+  };
+
   return (
     <Box>
       <Box mb={2}>
@@ -63,7 +73,7 @@ const MultiSelectControlPanel = ({
             <MultiSelect
               items={availableItems}
               selectedToMove={leftSelected}
-              setSelectedToMove={setLeftSelected}
+              setSelectedToMove={handleLeftSelectionChange}
               onItemsChange={(items) => handleItemChange(items, 'move')}
               loading={loading}
             />
@@ -106,7 +116,7 @@ const MultiSelectControlPanel = ({
             <MultiSelect
               items={selectedItems}
               selectedToMove={rightSelected}
-              setSelectedToMove={setRightSelected}
+              setSelectedToMove={handleRightSelectionChange}
               onItemsChange={(items) => handleItemChange(items, 'remove')}
               loading={loading}
             />

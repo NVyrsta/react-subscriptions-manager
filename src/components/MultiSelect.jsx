@@ -22,7 +22,7 @@ const MultiSelect = ({
     );
   };
 
-  const handleSelectItem = (item, event) => {
+  const handleSingleClick = (item, event) => {
     if (event.ctrlKey || event.metaKey) {
       setSelectedToMove((prevSelected) => {
         if (prevSelected.includes(item)) {
@@ -75,7 +75,7 @@ const MultiSelect = ({
             display="flex"
             justifyContent="space-between"
             alignItems="center"
-            onClick={(e) => handleSelectItem(item, e)}
+            onClick={(e) => handleSingleClick(item, e)}
             onDoubleClick={() => handleDoubleClick(item)}
             sx={{
               backgroundColor: selectedToMove.includes(item)
