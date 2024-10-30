@@ -25,7 +25,7 @@ const MultiSelectControlPanel = ({
 }) => {
   const [leftSelected, setLeftSelected] = useState([]);
   const [rightSelected, setRightSelected] = useState([]);
-  const isSmallScreen = useMediaQuery('(min-width:600px)');
+  const isDesktop = useMediaQuery('(min-width:600px)');
 
   const dispatch = useDispatch();
 
@@ -85,7 +85,7 @@ const MultiSelectControlPanel = ({
             }}
           >
             <ArrowButton
-              icon={isSmallScreen ? <FaArrowRight /> : <FaArrowDown />}
+              icon={isDesktop ? <FaArrowRight /> : <FaArrowDown />}
               onClick={() => handleItemChange(leftSelected, 'move')}
               isDisabled={
                 !leftSelected.length ||
@@ -93,7 +93,7 @@ const MultiSelectControlPanel = ({
               }
             />
             <ArrowButton
-              icon={isSmallScreen ? <FaArrowLeft /> : <FaArrowUp />}
+              icon={isDesktop ? <FaArrowLeft /> : <FaArrowUp />}
               onClick={() => handleItemChange(rightSelected, 'remove')}
               isDisabled={
                 !rightSelected.length ||
