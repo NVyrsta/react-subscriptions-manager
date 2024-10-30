@@ -23,18 +23,20 @@ const MultiSelectControlPanel = ({
   selectedItems,
   loading,
 }) => {
-  const [selectedToMove, setSelectedToMove] = useState([]);
+  const [leftSelected, setLeftSelected] = useState([]);
+  const [rightSelected, setRightSelected] = useState([]);
   const isSmallScreen = useMediaQuery('(min-width:600px)');
 
   const dispatch = useDispatch();
 
   const handleItemChange = (items, action) => {
     if (action === 'move') {
-      dispatch(moveItems({ items: selectedToMove, action: 'move' }));
+      dispatch(moveItems({ items: leftSelected, action: 'move' }));
     } else if (action === 'remove') {
-      dispatch(moveItems({ items: selectedToMove, action: 'remove' }));
+      dispatch(moveItems({ items: rightSelected, action: 'remove' }));
     }
-    setSelectedToMove([]);
+    setLeftSelected([]);
+    setRightSelected([]);
   };
 
   return (
@@ -60,8 +62,8 @@ const MultiSelectControlPanel = ({
           <Grid item xs={12} sm={5}>
             <MultiSelect
               items={availableItems}
-              selectedToMove={selectedToMove}
-              setSelectedToMove={setSelectedToMove}
+              selectedToMove={leftSelected}
+              setSelectedToMove={setLeftSelected}
               onItemsChange={(items) => handleItemChange(items, 'move')}
               loading={loading}
             />
@@ -84,18 +86,18 @@ const MultiSelectControlPanel = ({
           >
             <ArrowButton
               icon={isSmallScreen ? <FaArrowRight /> : <FaArrowDown />}
-              onClick={() => handleItemChange(selectedToMove, 'move')}
+              onClick={() => handleItemChange(leftSelected, 'move')}
               isDisabled={
-                !selectedToMove.length ||
-                selectedToMove.every((item) => selectedItems.includes(item))
+                !leftSelected.length ||
+                leftSelected.every((item) => selectedItems.includes(item))
               }
             />
             <ArrowButton
               icon={isSmallScreen ? <FaArrowLeft /> : <FaArrowUp />}
-              onClick={() => handleItemChange(selectedToMove, 'remove')}
+              onClick={() => handleItemChange(rightSelected, 'remove')}
               isDisabled={
-                !selectedToMove.length ||
-                selectedToMove.every((item) => availableItems.includes(item))
+                !rightSelected.length ||
+                rightSelected.every((item) => availableItems.includes(item))
               }
             />
           </Grid>
@@ -103,8 +105,8 @@ const MultiSelectControlPanel = ({
           <Grid item xs={12} sm={5}>
             <MultiSelect
               items={selectedItems}
-              selectedToMove={selectedToMove}
-              setSelectedToMove={setSelectedToMove}
+              selectedToMove={rightSelected}
+              setSelectedToMove={setRightSelected}
               onItemsChange={(items) => handleItemChange(items, 'remove')}
               loading={loading}
             />
